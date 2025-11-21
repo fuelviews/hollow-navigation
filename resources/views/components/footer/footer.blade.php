@@ -66,16 +66,17 @@
                 </div>
 
                 {{-- Right Column: Elevator Pitch and CTAs --}}
-                <div class="flex flex-col items-center lg:items-start justify-center space-y-8">
+                <div class="flex flex-col items-start justify-center space-y-8">
                     @if (config('business-info.elevator-pitch') !== null)
-                        <p class="text-center lg:text-left text-xl leading-relaxed text-footer-type font-light max-w-xl">
+                        <p class="text-left text-xl leading-relaxed text-footer-type font-light max-w-xl">
                             {{ config('business-info.elevator-pitch') }}
                         </p>
                     @endif
 
-                    <div class="flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
-                        <x-navigation::free-estimate-button />
-                        <x-navigation::phone-button />
+
+                    <div class="flex flex-col md:flex-row gap-2 md:gap-1 w-full md:w-auto mt-6 mb-8">
+                        <x-navigation::free-estimate-button class="w-full md:w-auto" />
+                        <x-navigation::phone-button class="w-full md:w-auto" />
                     </div>
                 </div>
             </div>
