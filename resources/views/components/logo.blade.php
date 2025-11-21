@@ -3,48 +3,31 @@
     $transparencyLogoShape = Navigation::getTransparencyLogoShape();
 
     // Classes for default logo
-    $defaultLogoClasses = '';
-    if ($defaultLogoShape === 'horizontal') {
-        $defaultLogoClasses = 'mx-auto w-24 lg:w-40';
-    } elseif ($defaultLogoShape === 'vertical') {
-        $defaultLogoClasses = 'mx-auto w-24 lg:w-32';
-    } elseif ($defaultLogoShape === 'square') {
-        $defaultLogoClasses = 'mx-auto w-24 lg:w-32';
-    }
+    $defaultLogoClasses = 'mx-auto h-12 lg:h-14 w-auto';
 
     // Classes for transparency logo
-    $transparencyLogoClasses = '';
-    if ($transparencyLogoShape === 'horizontal') {
-        $transparencyLogoClasses = 'mx-auto w-24 lg:w-40';
-    } elseif ($transparencyLogoShape === 'vertical') {
-        $transparencyLogoClasses = 'mx-auto w-24 lg:w-32';
-    } elseif ($transparencyLogoShape === 'square') {
-        $transparencyLogoClasses = 'mx-auto w-24 lg:w-32';
-    }
+    $transparencyLogoClasses = 'mx-auto h-12 lg:h-14 w-auto';
 @endphp
 
-<div {{ $attributes->only(['class']) }}>
-    <a href="{{ config('app.url') }}">
+<div {{ $attributes->only(['class']) }}
+    class="h-16 lg:h-20 transition-all duration-500 ease-in-out flex items-center justify-center">
+    <a href="{{ config('app.url') }}" class="h-full flex items-center">
         <span class="sr-only">
             {{ config('app.name') }}
         </span>
         @if(Navigation::getDefaultLogo())
             @if(Navigation::isLogoSwapEnabled())
-                <img x-show="!logoScrolled"
-                     {{ glide()->src(Navigation::getTransparencyLogo(), 1000, lazy: false) }} loading="eager"
-                     class="{{ $attributes->get('logoClass', $transparencyLogoClasses) }}"
-                     alt="{{ $attributes->get('alt', config('app.name')) }}"/>
+                <img x-show="!logoScrolled" {{ glide()->src(Navigation::getTransparencyLogo(), 1000, lazy: false) }}
+                    loading="eager" class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" />
 
                 <img x-show="logoScrolled" {{ glide()->src(Navigation::getDefaultLogo(), 1000, lazy: false) }} loading="eager"
-                     class="{{ $attributes->get('logoClass', $defaultLogoClasses) }}"
-                     alt="{{ $attributes->get('alt', config('app.name')) }}"/>
+                    class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" />
             @else
-                <img {{ glide()->src(Navigation::getDefaultLogo(), 1000, lazy: false) }} loading="eager"
-                     class="{{ $attributes->get('logoClass', $defaultLogoClasses) }}"
-                     alt="{{ $attributes->get('alt', config('app.name')) }}"/>
+                <img {{ glide()->src(Navigation::getDefaultLogo(), 1000, lazy: false) }} loading="eager" class="h-full w-auto"
+                    alt="{{ $attributes->get('alt', config('app.name')) }}" />
             @endif
         @else
-            <div class="{{ $attributes->get('logoClass', $defaultLogoClasses) }}">
+            <div class="h-full w-auto">
                 <x-navigation::social.rocketman />
             </div>
         @endif

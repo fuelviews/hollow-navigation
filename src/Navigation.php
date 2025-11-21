@@ -18,7 +18,7 @@ class Navigation
 
     public function isDropdownRouteActive(array $links): bool
     {
-        return collect($links)->contains(fn (array $link) => request()->routeIs($link['route']));
+        return collect($links)->contains(fn(array $link) => request()->routeIs($link['route']));
     }
 
     public function getDefaultLogo(): string
@@ -88,5 +88,10 @@ class Navigation
     public function getPreScrolledRoute(): string
     {
         return $this->isPreScrolledRoute() ? 'true' : 'false';
+    }
+
+    public function isRoundedBottomScrolled(): bool
+    {
+        return $this->config['rounded_bottom_scrolled'] ?? false;
     }
 }
