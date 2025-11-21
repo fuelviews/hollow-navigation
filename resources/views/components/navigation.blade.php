@@ -33,7 +33,7 @@
 
                 <!-- Hamburger (Shows on Mobile) -->
                 <div class="flex items-center md:hidden">
-                    <button @click="dropdownOpen = ! dropdownOpen">
+                    <button @click="dropdownOpen = !dropdownOpen; logoScrolled = dropdownOpen">
                         <x-navigation::hamburger-button />
                     </button>
                 </div>
