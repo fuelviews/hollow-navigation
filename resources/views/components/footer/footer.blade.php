@@ -8,22 +8,22 @@
     $logoShape = Navigation::getTransparencyLogoShape();
     $logoClasses = '';
     if ($logoShape === 'horizontal') {
-        $logoClasses = 'mx-auto w-64 lg:w-72';
+        $logoClasses = 'w-72 lg:w-80';
     } elseif ($logoShape === 'vertical') {
-        $logoClasses = 'mx-auto w-32 lg:w-48';
+        $logoClasses = 'w-40 lg:w-56';
     } elseif ($logoShape === 'square') {
-        $logoClasses = 'mx-auto w-48 lg:w-64';
+        $logoClasses = 'w-56 lg:w-72';
     }
 @endphp
 
 <div>
     <footer class="bg-footer-back">
-        <div class="mx-auto max-w-standard px-6 py-16 lg:py-20">
+        <div class="mx-auto max-w-standard px-6 py-20 lg:py-24">
 
             {{-- Top Section: Logo, Pitch, CTAs --}}
-            <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 mb-16">
+            <div class="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-20 pb-16 border-b border-gray-400/10">
                 {{-- Left Column: Logo and Social --}}
-                <div class="flex flex-col items-center lg:items-start space-y-8">
+                <div class="flex flex-col items-center lg:items-start space-y-10">
                     <div class="flex justify-center lg:justify-start text-footer-type">
                         @if (Navigation::getDefaultLogo())
                             @if (Navigation::isLogoSwapEnabled())
@@ -42,7 +42,7 @@
 
                     {{-- Social Media Icons --}}
                     @if(isset($socialMedia) && !empty(array_filter($socialMedia)))
-                        <div class="flex flex-wrap justify-center lg:justify-start gap-4">
+                        <div class="flex flex-wrap justify-center lg:justify-start gap-5">
                             @isset($socialMedia['youtube'])
                                 <x-navigation::social.youtube :socialMedia="$socialMedia['youtube']" />
                             @endisset
@@ -66,14 +66,14 @@
                 </div>
 
                 {{-- Right Column: Elevator Pitch and CTAs --}}
-                <div class="flex flex-col items-center lg:items-start space-y-6">
+                <div class="flex flex-col items-center lg:items-start justify-center space-y-8">
                     @if (config('business-info.elevator-pitch') !== null)
-                        <p class="text-center lg:text-left text-lg leading-relaxed text-footer-type max-w-xl">
+                        <p class="text-center lg:text-left text-xl leading-relaxed text-footer-type font-light max-w-xl">
                             {{ config('business-info.elevator-pitch') }}
                         </p>
                     @endif
 
-                    <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                    <div class="flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
                         <x-navigation::free-estimate-button />
                         <x-navigation::phone-button />
                     </div>
@@ -81,8 +81,9 @@
             </div>
 
             {{-- Navigation Columns Section --}}
-            <div class="border-t border-gray-400/20 pt-12 mb-12">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 text-footer-type">
+            <div class="py-16">
+                <div
+                    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12 text-footer-type">
 
                     {{-- Column 1: Menu (Non-Dropdown Links) --}}
                     @php
@@ -90,8 +91,9 @@
                     @endphp
 
                     @if($nonDropdownLinks->isNotEmpty())
-                        <div class="space-y-4">
-                            <h3 class="font-bold text-xl pb-3 border-b-2 border-prime/50">
+                        <div class="space-y-5">
+                            <h3
+                                class="font-bold text-lg uppercase tracking-wide pb-4 border-b-2 border-prime text-footer-type/90">
                                 {{ __('Menu') }}
                             </h3>
                             <ul class="space-y-3">
@@ -110,8 +112,9 @@
                     {{-- Dropdown Columns --}}
                     @foreach (Navigation::getNavigationItems() as $item)
                         @if ($item['type'] === 'dropdown')
-                            <div class="space-y-4">
-                                <h3 class="font-bold text-xl pb-3 border-b-2 border-prime/50">
+                            <div class="space-y-5">
+                                <h3
+                                    class="font-bold text-lg uppercase tracking-wide pb-4 border-b-2 border-prime text-footer-type/90">
                                     {{ __($item['name']) }}
                                 </h3>
                                 <ul class="space-y-3">
@@ -131,10 +134,11 @@
             </div>
 
             {{-- Legal Footer --}}
-            <div class="border-t border-gray-400/20 pt-8">
-                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 text-sm text-gray-400">
+            <div class="border-t border-gray-400/10 pt-10">
+                <div
+                    class="flex flex-col md:flex-row md:justify-between md:items-center gap-6 text-sm text-gray-400/80">
                     {{-- Copyright --}}
-                    <p class="text-center md:text-left">
+                    <p class="text-center md:text-left font-light">
                         &copy; {{ date('Y') }}
                         @if (config('business-info.legal-name') !== null)
                             {{ config('business-info.legal-name') }}
@@ -142,28 +146,25 @@
                     </p>
 
                     {{-- Legal Links --}}
-                    <div class="flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-2">
-                        <span class="text-gray-400/75">All rights reserved</span>
+                    <div class="flex flex-wrap justify-center md:justify-end items-center gap-x-6 gap-y-2">
+                        <span class="text-gray-400/60 font-light">All rights reserved</span>
 
                         @if(Route::has('terms-and-conditions'))
-                            <span class="text-gray-400/50">&middot;</span>
-                            <a class="text-legal-link hover:text-legal-link/75 transition-colors underline"
+                            <a class="text-legal-link hover:text-prime transition-colors duration-200 font-light"
                                 href="{{ route('terms-and-conditions') }}" title="Terms & Conditions">
                                 Terms & Conditions
                             </a>
                         @endif
 
                         @if(Route::has('privacy-policy'))
-                            <span class="text-gray-400/50">&middot;</span>
-                            <a class="text-legal-link hover:text-legal-link/75 transition-colors underline"
+                            <a class="text-legal-link hover:text-prime transition-colors duration-200 font-light"
                                 href="{{ route('privacy-policy') }}" title="Privacy Policy">
                                 Privacy Policy
                             </a>
                         @endif
 
                         @if(Route::has('sitemap'))
-                            <span class="text-gray-400/50">&middot;</span>
-                            <a class="text-legal-link hover:text-legal-link/75 transition-colors underline"
+                            <a class="text-legal-link hover:text-prime transition-colors duration-200 font-light"
                                 href="{{ route('sitemap') }}" title="Sitemap">
                                 Sitemap
                             </a>
