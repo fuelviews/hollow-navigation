@@ -21,14 +21,41 @@
         @if(Navigation::getDefaultLogo())
             <div class="h-full flex items-center">
                 @if(Navigation::isLogoSwapEnabled())
-                    <img x-show="!logoScrolled" {{ glide()->src(Navigation::getTransparencyLogo(), 1000, lazy: false) }}
-                        loading="eager" class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                    @php
+                        $transparencyLogo = Navigation::getTransparencyLogo();
+                        $defaultLogo = Navigation::getDefaultLogo();
+                        $isTransparencyStatic = str_starts_with($transparencyLogo, '/images/');
+                        $isDefaultStatic = str_starts_with($defaultLogo, '/images/');
+                    @endphp
 
-                    <img x-show="logoScrolled" {{ glide()->src(Navigation::getDefaultLogo(), 1000, lazy: false) }}
-                        loading="eager" class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                    @if($isTransparencyStatic)
+                        <img x-show="!logoScrolled" src="{{ asset($transparencyLogo) }}" loading="eager" class="h-full w-auto"
+                            alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                    @else
+                        <img x-show="!logoScrolled" {{ glide()->src($transparencyLogo, 1000, lazy: false) }} loading="eager"
+                            class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                    @endif
+
+                    @if($isDefaultStatic)
+                        <img x-show="logoScrolled" src="{{ asset($defaultLogo) }}" loading="eager" class="h-full w-auto"
+                            alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                    @else
+                        <img x-show="logoScrolled" {{ glide()->src($defaultLogo, 1000, lazy: false) }} loading="eager"
+                            class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                    @endif
                 @else
-                    <img {{ glide()->src(Navigation::getDefaultLogo(), 1000, lazy: false) }} loading="eager"
-                        class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                    @php
+                        $defaultLogo = Navigation::getDefaultLogo();
+                        $isDefaultStatic = str_starts_with($defaultLogo, '/images/');
+                    @endphp
+
+                    @if($isDefaultStatic)
+                        <img src="{{ asset($defaultLogo) }}" loading="eager" class="h-full w-auto"
+                            alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                    @else
+                        <img {{ glide()->src($defaultLogo, 1000, lazy: false) }} loading="eager" class="h-full w-auto"
+                            alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                    @endif
                 @endif
             </div>
         @else
