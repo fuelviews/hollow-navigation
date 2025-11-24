@@ -36,3 +36,6 @@ error_log
 .mcp.json
 .php-cs-fixer.cache
 herd.yml
+
+# Snyk Security Extension - AI Rules (auto-generated)
+.cursor/rules/snyk_rules.mdc
