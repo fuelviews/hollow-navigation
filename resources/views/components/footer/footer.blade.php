@@ -100,7 +100,7 @@
                             <ul class="space-y-3">
                                 @foreach ($nonDropdownLinks as $item)
                                     <li>
-                                        <x-navigation::footer.footer-navigation-link :href="route($item['route'])"
+                                        <x-navigation::footer.footer-navigation-link :href="$item['url'] ?? '#'"
                                             :active="request()->routeIs($item['route'])">
                                             {{ __($item['name']) }}
                                         </x-navigation::footer.footer-navigation-link>
@@ -121,7 +121,7 @@
                                 <ul class="space-y-3">
                                     @foreach ($item['links'] as $link)
                                         <li>
-                                            <x-navigation::footer.footer-navigation-link :href="route($link['route'])"
+                                            <x-navigation::footer.footer-navigation-link :href="$link['url'] ?? '#'"
                                                 :active="request()->routeIs($link['route'])">
                                                 {{ __($link['name']) }}
                                             </x-navigation::footer.footer-navigation-link>

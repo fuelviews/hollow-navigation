@@ -13,7 +13,14 @@ class Navigation
 
     public function getNavigationItems(): Collection
     {
-        return collect($this->config['navigation'] ?? [])->sortBy('position')->values();
+        $navigation = $this->config['navigation'] ?? [];
+
+        // If navigation is a closure, evaluate it
+        if (is_callable($navigation)) {
+            $navigation = $navigation();
+        }
+
+        return collect($navigation)->sortBy('position')->values();
     }
 
     public function isDropdownRouteActive(array $links): bool

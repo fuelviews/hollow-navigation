@@ -17,9 +17,9 @@
             <div class="flex items-center space-x-4 md:space-x-0 md:flex md:flex-col md:items-end md:justify-between">
 
                 <!-- Desktop Navigation -->
-                <div class="hidden md:flex md:flex-row md:space-x-4 md:order-2">
+                <ul class="hidden md:flex md:flex-row md:space-x-4 md:order-2 list-none">
                     <x-navigation::desktop.desktop-navigation />
-                </div>
+                </ul>
 
                 <!-- CTA Buttons -->
                 <div class="flex items-center space-x-4 justify-end md:order-1 md:pb-2">

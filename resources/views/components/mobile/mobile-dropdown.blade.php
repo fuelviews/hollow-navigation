@@ -13,7 +13,7 @@
     foreach ($links as $link) {
         $url = isset($link['params'])
             ? route($link['route'], $link['params'])
-            : route($link['route']);
+            : ($link['url'] ?? '#');
 
         $parsedPath = trim(parse_url($url, PHP_URL_PATH) ?? '', '/');
 
@@ -53,7 +53,7 @@
             @php
                 $url = isset($link['params'])
                     ? route($link['route'], $link['params'])
-                    : route($link['route']);
+                    : ($link['url'] ?? '#');
 
                 $parsedPath = trim(parse_url($url, PHP_URL_PATH) ?? '', '/');
                 $childActive = request()->is($parsedPath) || request()->is($parsedPath . '/*');

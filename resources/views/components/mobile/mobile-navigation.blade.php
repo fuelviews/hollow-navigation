@@ -1,18 +1,15 @@
 <nav>
     <ul class="space-y-1">
-        @foreach(Navigation::getNavigationItems() as $index => $item)
+        @foreach(\Fuelviews\Navigation\Facades\Navigation::getNavigationItems() as $index => $item)
             @php
                 $bgClass = $index % 2 === 0 ? 'bg-gray-100' : 'bg-white';
             @endphp
 
             @if ($item['type'] === 'link')
                 @php
-                    $linkUrl = isset($item['params'])
-                        ? route($item['route'], $item['params'])
-                        : route($item['route']);
-
+                    $hasRoute = isset($item['route']) && \Illuminate\Support\Facades\Route::has($item['route']);
+                    $linkUrl = $hasRoute ? route($item['route'], $item['params'] ?? []) : ($item['url'] ?? '#');
                     $parsedPath = trim(parse_url($linkUrl, PHP_URL_PATH) ?? '', '/');
-
                     $active = request()->is($parsedPath) || request()->is($parsedPath . '/*');
                 @endphp
 
@@ -25,14 +22,10 @@
             @elseif ($item['type'] === 'dropdown' && array_key_exists('links', $item))
                 @php
                     $dropdownActive = false;
-
                     foreach ($item['links'] as $link) {
-                        $linkUrl = isset($link['params'])
-                            ? route($link['route'], $link['params'])
-                            : route($link['route']);
-
+                        $hasRoute = isset($link['route']) && \Illuminate\Support\Facades\Route::has($link['route']);
+                        $linkUrl = $hasRoute ? route($link['route'], $link['params'] ?? []) : ($link['url'] ?? '#');
                         $parsedPath = trim(parse_url($linkUrl, PHP_URL_PATH) ?? '', '/');
-
                         if (request()->is($parsedPath) || request()->is($parsedPath . '/*')) {
                             $dropdownActive = true;
                             break;
