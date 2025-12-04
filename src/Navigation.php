@@ -136,4 +136,27 @@ class Navigation
     {
         return (bool) $this->getThemeSetting('nav_sticky', true);
     }
+
+    /**
+     * Get nav color with opacity for frosted glass effect
+     */
+    public function getNavColorWithOpacity(float $opacity = 0.7): string
+    {
+        $navColor = $this->getThemeSetting('nav', '#FFFFFF');
+        
+        // Convert hex to rgba
+        $hex = ltrim($navColor, '#');
+        
+        // Handle 3-digit hex
+        if (strlen($hex) === 3) {
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+        }
+        
+        // Convert to RGB
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+        
+        return "rgba({$r}, {$g}, {$b}, {$opacity})";
+    }
 }

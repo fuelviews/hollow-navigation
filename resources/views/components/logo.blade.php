@@ -1,4 +1,5 @@
 @php
+    $solidDefault = Navigation::getNavSolidDefault();
     $defaultLogoShape = Navigation::getDefaultLogoShape();
     $transparencyLogoShape = Navigation::getTransparencyLogoShape();
 
@@ -7,6 +8,13 @@
 
     // Classes for transparency logo
     $transparencyLogoClasses = 'mx-auto h-12 lg:h-14 w-auto';
+    
+    // For transparent mode, compute initial logo state server-side (matches navigation-scroll logic)
+    if (!$solidDefault && Navigation::isLogoSwapEnabled()) {
+        $preScrolledRoute = Navigation::getPreScrolledRoute();
+        $preScrolled = $preScrolledRoute === 'true';
+        $initialShowTransparencyLogo = !$preScrolled; // Show transparency logo if not pre-scrolled
+    }
 @endphp
 
 <div {{ $attributes->only(['class']) }}
@@ -28,20 +36,32 @@
                         $isDefaultStatic = str_starts_with($defaultLogo, '/images/');
                     @endphp
 
-                    @if($isTransparencyStatic)
-                        <img x-show="!logoScrolled" src="{{ asset($transparencyLogo) }}" loading="eager" class="h-full w-auto"
-                            alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                    @if($solidDefault)
+                        {{-- Solid default mode: only show default logo (no Alpine needed) --}}
+                        @if($isDefaultStatic)
+                            <img src="{{ asset($defaultLogo) }}" loading="eager" class="h-full w-auto"
+                                alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                        @else
+                            <img {{ glide()->src($defaultLogo, 1000, lazy: false) }} loading="eager"
+                                class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                        @endif
                     @else
-                        <img x-show="!logoScrolled" {{ glide()->src($transparencyLogo, 1000, lazy: false) }} loading="eager"
-                            class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" />
-                    @endif
+                        {{-- Transparent mode: both logos use x-show, initial visibility set via style --}}
+                        @if($isTransparencyStatic)
+                            <img x-show="!logoScrolled" src="{{ asset($transparencyLogo) }}" loading="eager" class="h-full w-auto"
+                                alt="{{ $attributes->get('alt', config('app.name')) }}" style="{{ $initialShowTransparencyLogo ? '' : 'display: none;' }}" />
+                        @else
+                            <img x-show="!logoScrolled" {{ glide()->src($transparencyLogo, 1000, lazy: false) }} loading="eager"
+                                class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" style="{{ $initialShowTransparencyLogo ? '' : 'display: none;' }}" />
+                        @endif
 
-                    @if($isDefaultStatic)
-                        <img x-show="logoScrolled" src="{{ asset($defaultLogo) }}" loading="eager" class="h-full w-auto"
-                            alt="{{ $attributes->get('alt', config('app.name')) }}" />
-                    @else
-                        <img x-show="logoScrolled" {{ glide()->src($defaultLogo, 1000, lazy: false) }} loading="eager"
-                            class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" />
+                        @if($isDefaultStatic)
+                            <img x-show="logoScrolled" src="{{ asset($defaultLogo) }}" loading="eager" class="h-full w-auto"
+                                alt="{{ $attributes->get('alt', config('app.name')) }}" style="{{ $initialShowTransparencyLogo ? 'display: none;' : '' }}" />
+                        @else
+                            <img x-show="logoScrolled" {{ glide()->src($defaultLogo, 1000, lazy: false) }} loading="eager"
+                                class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" style="{{ $initialShowTransparencyLogo ? 'display: none;' : '' }}" />
+                        @endif
                     @endif
                 @else
                     @php
@@ -78,10 +98,16 @@
                 };
             @endphp
             <div class="hidden md:block gap-{{ $gap }}">
-                <span x-show="!logoScrolled"
-                    class="text-white font-bold {{ $textSizeClasses }} whitespace-pre-line leading-tight">{{ config('navigation.wordmark') }}</span>
-                <span x-show="logoScrolled"
-                    class="text-gray-700 font-bold {{ $textSizeClasses }} whitespace-pre-line leading-tight">{{ config('navigation.wordmark') }}</span>
+                @if($solidDefault)
+                    {{-- Solid default mode: only show scrolled wordmark --}}
+                    <span class="text-gray-700 font-bold {{ $textSizeClasses }} whitespace-pre-line leading-tight">{{ config('navigation.wordmark') }}</span>
+                @else
+                    {{-- Transparent mode: both wordmarks use x-show, initial visibility set via style --}}
+                    <span x-show="!logoScrolled"
+                        class="text-white font-bold {{ $textSizeClasses }} whitespace-pre-line leading-tight" style="{{ $initialShowTransparencyLogo ? '' : 'display: none;' }}">{{ config('navigation.wordmark') }}</span>
+                    <span x-show="logoScrolled"
+                        class="text-gray-700 font-bold {{ $textSizeClasses }} whitespace-pre-line leading-tight" style="{{ $initialShowTransparencyLogo ? 'display: none;' : '' }}">{{ config('navigation.wordmark') }}</span>
+                @endif
             </div>
         @endif
     </a>

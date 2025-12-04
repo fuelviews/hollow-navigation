@@ -20,8 +20,16 @@
     // Pre-compute classes for solid default mode (server-side rendering for performance)
     if ($solidDefault) {
         // Solid default: always has background, no transparency
+        // For frosted glass, use 70% opacity background with backdrop blur
         // Rounded corners are applied dynamically when scrolled
-        $bgClasses = $frostedGlass ? 'backdrop-blur-xl bg-nav/70' : 'bg-nav';
+        if ($frostedGlass) {
+            $navColorRgba = Navigation::getNavColorWithOpacity(0.7);
+            $bgClasses = 'backdrop-blur-xl';
+            $bgStyle = "background-color: {$navColorRgba};";
+        } else {
+            $bgClasses = 'bg-nav';
+            $bgStyle = '';
+        }
         $textClasses = 'text-nav-type';
         $staticClasses = "{$basePositionClasses} {$bgClasses} {$textClasses} transition-colors duration-300 ease-in-out";
         // For solid default, always show scrolled logo (no logo swap needed since nav is always solid)
@@ -32,7 +40,14 @@
         $preScrolled = $preScrolledRoute === 'true';
         $initialLogoScrolled = $preScrolled ? 'true' : 'false';
         // Pre-compute scrolled background classes (rounded corners applied separately via :class)
-        $scrolledBgClasses = ($frostedGlass ? 'backdrop-blur-xl bg-nav/70' : 'bg-nav') . ' text-nav-type transition-colors duration-300 ease-in-out';
+        if ($frostedGlass) {
+            $navColorRgba = Navigation::getNavColorWithOpacity(0.7);
+            $scrolledBgClasses = 'backdrop-blur-xl text-nav-type transition-colors duration-300 ease-in-out';
+            $scrolledBgStyle = "background-color: {$navColorRgba};";
+        } else {
+            $scrolledBgClasses = 'bg-nav text-nav-type transition-colors duration-300 ease-in-out';
+            $scrolledBgStyle = '';
+        }
         
         // Set initial background - scrolled style for pre-scrolled routes, transparent for others
         if ($preScrolled) {
@@ -43,10 +58,14 @@
         } else {
             // Set transparent background in static classes to prevent flash
             // Alpine will override with scrolled background when needed
-            $initialBg = Navigation::isTransparentNavBackground() ? 'bg-transparent text-nav-type-trans' : 'bg-nav/70 text-nav-type';
+            $initialBg = Navigation::isTransparentNavBackground() ? 'bg-transparent text-nav-type-trans' : 'bg-nav bg-opacity-70 text-nav-type';
             $staticClasses = $basePositionClasses . ' ' . $initialBg . ' transition-colors duration-300 ease-in-out';
         }
     }
+    
+    // Initialize style variables for use in templates
+    $bgStyle = $bgStyle ?? '';
+    $scrolledBgStyle = $scrolledBgStyle ?? '';
 @endphp
 
 @if($solidDefault)
@@ -115,7 +134,8 @@
         {{-- Solid default mode: simpler Alpine logic, pre-rendered classes for no layout shift --}}
         <nav x-ref="nav" 
              :class="{ 'rounded-b-standard': roundedBottom }"
-             class="{{ $staticClasses }}">
+             class="{{ $staticClasses }}"
+             @if($frostedGlass && isset($bgStyle)) style="{{ $bgStyle }}" @endif>
 
             {{ $slot }}
         </nav>
@@ -188,10 +208,14 @@
         " :class="{
             '{{ $scrolledBgClasses }}': isSticky && scrolled && !preScrolled,
             'bg-transparent text-nav-type-trans': isSticky && !scrolled && !preScrolled && transparentNav,
-            'bg-nav/70 text-nav-type': isSticky && !scrolled && !preScrolled && !transparentNav,
+            'bg-nav bg-opacity-70 text-nav-type': isSticky && !scrolled && !preScrolled && !transparentNav,
             'bg-nav': dropdownOpen,
             'rounded-b-standard': isSticky && roundedBottom && (scrolled || preScrolled)
-        }" class="{{ $staticClasses }}" x-transition>
+        }" 
+        @if($frostedGlass && isset($scrolledBgStyle)) 
+        :style="(isSticky && scrolled && !preScrolled) ? '{{ $scrolledBgStyle }}' : ''"
+        @endif
+        class="{{ $staticClasses }}" x-transition>
 
         {{ $slot }}
     </nav>
