@@ -99,15 +99,41 @@ class Navigation
 
     public function isRoundedBottomScrolled(): bool
     {
-        // First check if Theme model exists and has the setting
+        return $this->getNavRoundedBottom();
+    }
+
+    /**
+     * Get theme setting with fallback to config
+     */
+    protected function getThemeSetting(string $key, $default = null)
+    {
         if (class_exists(\App\Models\Theme::class)) {
             $theme = \App\Models\Theme::current();
-            if ($theme && isset($theme->nav_rounded_bottom)) {
-                return (bool) $theme->nav_rounded_bottom;
+            if ($theme && isset($theme->$key)) {
+                return $theme->$key;
             }
         }
         
-        // Fallback to config
-        return $this->config['rounded_bottom_scrolled'] ?? false;
+        return $this->config[$key] ?? $default;
+    }
+
+    public function getNavFrostedGlass(): bool
+    {
+        return (bool) $this->getThemeSetting('nav_frosted_glass', false);
+    }
+
+    public function getNavSolidDefault(): bool
+    {
+        return (bool) $this->getThemeSetting('nav_solid_default', false);
+    }
+
+    public function getNavRoundedBottom(): bool
+    {
+        return (bool) $this->getThemeSetting('nav_rounded_bottom', false);
+    }
+
+    public function getNavSticky(): bool
+    {
+        return (bool) $this->getThemeSetting('nav_sticky', true);
     }
 }
