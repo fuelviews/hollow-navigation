@@ -99,6 +99,15 @@ class Navigation
 
     public function isRoundedBottomScrolled(): bool
     {
+        // First check if Theme model exists and has the setting
+        if (class_exists(\App\Models\Theme::class)) {
+            $theme = \App\Models\Theme::current();
+            if ($theme && isset($theme->nav_rounded_bottom)) {
+                return (bool) $theme->nav_rounded_bottom;
+            }
+        }
+        
+        // Fallback to config
         return $this->config['rounded_bottom_scrolled'] ?? false;
     }
 }
