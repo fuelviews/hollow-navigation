@@ -8,7 +8,7 @@
 
     // Classes for transparency logo
     $transparencyLogoClasses = 'mx-auto h-12 lg:h-14 w-auto';
-    
+
     // For transparent mode, compute initial logo state server-side (matches navigation-scroll logic)
     if (!$solidDefault && Navigation::isLogoSwapEnabled()) {
         $preScrolledRoute = Navigation::getPreScrolledRoute();
