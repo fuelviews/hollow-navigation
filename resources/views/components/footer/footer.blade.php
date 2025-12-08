@@ -26,11 +26,15 @@
                 <div class="flex flex-col items-center lg:items-start space-y-10">
                     <div class="flex justify-center lg:justify-start text-footer-type">
                         @if (Navigation::getDefaultLogo())
+                            @php
+                                $transparencyLogo = Navigation::getTransparencyLogo();
+                                $defaultLogo = Navigation::getDefaultLogo();
+                            @endphp
                             @if (Navigation::isLogoSwapEnabled())
-                                <img {{ glide()->src(Navigation::getTransparencyLogo()) }} class="{{ $logoClasses }}"
+                                <img src="{{ asset($transparencyLogo) }}" class="{{ $logoClasses }}"
                                     alt="{{ config('app.name') }}" />
                             @else
-                                <img {{ glide()->src(Navigation::getDefaultLogo()) }} class="{{ $logoClasses }}"
+                                <img src="{{ asset($defaultLogo) }}" class="{{ $logoClasses }}"
                                     alt="{{ config('app.name') }}" />
                             @endif
                         @else

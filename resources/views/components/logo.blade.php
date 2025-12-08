@@ -32,50 +32,26 @@
                     @php
                         $transparencyLogo = Navigation::getTransparencyLogo();
                         $defaultLogo = Navigation::getDefaultLogo();
-                        $isTransparencyStatic = str_starts_with($transparencyLogo, '/images/');
-                        $isDefaultStatic = str_starts_with($defaultLogo, '/images/');
                     @endphp
 
                     @if($solidDefault)
                         {{-- Solid default mode: only show default logo (no Alpine needed) --}}
-                        @if($isDefaultStatic)
-                            <img src="{{ asset($defaultLogo) }}" loading="eager" class="h-full w-auto"
-                                alt="{{ $attributes->get('alt', config('app.name')) }}" />
-                        @else
-                            <img {{ glide()->src($defaultLogo, 1000, lazy: false) }} loading="eager"
-                                class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" />
-                        @endif
+                        <img src="{{ asset($defaultLogo) }}" loading="eager" class="h-full w-auto"
+                            alt="{{ $attributes->get('alt', config('app.name')) }}" />
                     @else
                         {{-- Transparent mode: both logos use x-show, initial visibility set via style --}}
-                        @if($isTransparencyStatic)
-                            <img x-show="!logoScrolled" src="{{ asset($transparencyLogo) }}" loading="eager" class="h-full w-auto"
-                                alt="{{ $attributes->get('alt', config('app.name')) }}" style="{{ $initialShowTransparencyLogo ? '' : 'display: none;' }}" />
-                        @else
-                            <img x-show="!logoScrolled" {{ glide()->src($transparencyLogo, 1000, lazy: false) }} loading="eager"
-                                class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" style="{{ $initialShowTransparencyLogo ? '' : 'display: none;' }}" />
-                        @endif
-
-                        @if($isDefaultStatic)
-                            <img x-show="logoScrolled" src="{{ asset($defaultLogo) }}" loading="eager" class="h-full w-auto"
-                                alt="{{ $attributes->get('alt', config('app.name')) }}" style="{{ $initialShowTransparencyLogo ? 'display: none;' : '' }}" />
-                        @else
-                            <img x-show="logoScrolled" {{ glide()->src($defaultLogo, 1000, lazy: false) }} loading="eager"
-                                class="h-full w-auto" alt="{{ $attributes->get('alt', config('app.name')) }}" style="{{ $initialShowTransparencyLogo ? 'display: none;' : '' }}" />
-                        @endif
+                        <img x-show="!logoScrolled" src="{{ asset($transparencyLogo) }}" loading="eager" class="h-full w-auto"
+                            alt="{{ $attributes->get('alt', config('app.name')) }}" style="{{ $initialShowTransparencyLogo ? '' : 'display: none;' }}" />
+                        <img x-show="logoScrolled" src="{{ asset($defaultLogo) }}" loading="eager" class="h-full w-auto"
+                            alt="{{ $attributes->get('alt', config('app.name')) }}" style="{{ $initialShowTransparencyLogo ? 'display: none;' : '' }}" />
                     @endif
                 @else
                     @php
                         $defaultLogo = Navigation::getDefaultLogo();
-                        $isDefaultStatic = str_starts_with($defaultLogo, '/images/');
                     @endphp
 
-                    @if($isDefaultStatic)
-                        <img src="{{ asset($defaultLogo) }}" loading="eager" class="h-full w-auto"
-                            alt="{{ $attributes->get('alt', config('app.name')) }}" />
-                    @else
-                        <img {{ glide()->src($defaultLogo, 1000, lazy: false) }} loading="eager" class="h-full w-auto"
-                            alt="{{ $attributes->get('alt', config('app.name')) }}" />
-                    @endif
+                    <img src="{{ asset($defaultLogo) }}" loading="eager" class="h-full w-auto"
+                        alt="{{ $attributes->get('alt', config('app.name')) }}" />
                 @endif
             </div>
         @else
