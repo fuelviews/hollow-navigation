@@ -73,16 +73,20 @@
                     default => 'text-lg lg:text-xl',
                 };
             @endphp
+            @php
+                $wordmarkColorDefault = config('navigation.wordmark_color_default', '#1E293B');
+                $wordmarkColorScrolled = config('navigation.wordmark_color_scrolled', '#FFFFFF');
+            @endphp
             <div class="hidden md:block gap-{{ $gap }}">
                 @if($solidDefault)
                     {{-- Solid default mode: only show scrolled wordmark --}}
-                    <span class="text-gray-700 font-bold {{ $textSizeClasses }} whitespace-pre-line leading-tight">{{ config('navigation.wordmark') }}</span>
+                    <span class="font-bold {{ $textSizeClasses }} whitespace-pre-line leading-tight" style="color: {{ $wordmarkColorDefault }};">{{ config('navigation.wordmark') }}</span>
                 @else
                     {{-- Transparent mode: both wordmarks use x-show, initial visibility set via style --}}
                     <span x-show="!logoScrolled"
-                        class="text-white font-bold {{ $textSizeClasses }} whitespace-pre-line leading-tight" style="{{ $initialShowTransparencyLogo ? '' : 'display: none;' }}">{{ config('navigation.wordmark') }}</span>
+                        class="font-bold {{ $textSizeClasses }} whitespace-pre-line leading-tight" style="color: {{ $wordmarkColorScrolled }}; {{ $initialShowTransparencyLogo ? '' : 'display: none;' }}">{{ config('navigation.wordmark') }}</span>
                     <span x-show="logoScrolled"
-                        class="text-gray-700 font-bold {{ $textSizeClasses }} whitespace-pre-line leading-tight" style="{{ $initialShowTransparencyLogo ? 'display: none;' : '' }}">{{ config('navigation.wordmark') }}</span>
+                        class="font-bold {{ $textSizeClasses }} whitespace-pre-line leading-tight" style="color: {{ $wordmarkColorDefault }}; {{ $initialShowTransparencyLogo ? 'display: none;' : '' }}">{{ config('navigation.wordmark') }}</span>
                 @endif
             </div>
         @endif
