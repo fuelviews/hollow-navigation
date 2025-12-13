@@ -58,8 +58,8 @@
         } else {
             // Set transparent background in static classes to prevent flash
             // Alpine will override with scrolled background when needed
-            $initialBg = Navigation::isTransparentNavBackground() ? 'bg-transparent text-nav-type-trans' : 'bg-nav bg-opacity-70 text-nav-type';
-            $staticClasses = $basePositionClasses . ' ' . $initialBg . ' transition-colors duration-300 ease-in-out';
+            // Don't include background classes in static - let Alpine handle it completely
+            $staticClasses = $basePositionClasses . ' transition-colors duration-300 ease-in-out';
         }
     }
 
@@ -183,11 +183,17 @@
 
             // Update scroll state on scroll
             const updateScrollState = () => {
-                if (isSticky && !preScrolled) {
+                if (isSticky) {
                     const isScrolled = window.scrollY > window.innerHeight * 0.05;
-                    if (transparentNav) {
-                        scrolled = isScrolled;
+                    // Always update scrolled state so nav can show scrolled background
+                    scrolled = isScrolled;
+                    if (logoSwap) {
+                        logoScrolled = isScrolled;
                     }
+                } else {
+                    // When not sticky, still track scroll for other features
+                    const isScrolled = window.scrollY > window.innerHeight * 0.05;
+                    scrolled = isScrolled;
                     if (logoSwap) {
                         logoScrolled = isScrolled;
                     }
@@ -205,17 +211,19 @@
                 isMobile = window.innerWidth < 640;
                 if (!isMobile) showEstimate = false;
             });
-        " :class="{
-            '{{ $scrolledBgClasses }}': isSticky && scrolled && !preScrolled,
-            'bg-transparent text-nav-type-trans': isSticky && !scrolled && !preScrolled && transparentNav,
-            'bg-nav bg-opacity-70 text-nav-type': isSticky && !scrolled && !preScrolled && !transparentNav,
-            'bg-nav': dropdownOpen,
-            'rounded-b-standard': isSticky && roundedBottom && (scrolled || preScrolled)
+        "
+        :style="(isSticky && scrolled && !preScrolled && {{ json_encode($frostedGlass) }} && '{{ $scrolledBgStyle }}') ? '{{ $scrolledBgStyle }}' : ''"
+        class="{{ $basePositionClasses }} transition-colors duration-300 ease-in-out"
+        x-bind:class="{
+            'bg-nav': (isSticky && scrolled) || (isSticky && preScrolled) || dropdownOpen || (isSticky && !scrolled && !preScrolled && !transparentNav),
+            'text-nav-type': (isSticky && scrolled) || (isSticky && preScrolled) || dropdownOpen || (isSticky && !scrolled && !preScrolled && !transparentNav),
+            'backdrop-blur-xl': (isSticky && (scrolled || preScrolled)) && {{ json_encode($frostedGlass) }},
+            'bg-transparent': isSticky && !scrolled && !preScrolled && transparentNav,
+            'text-nav-type-trans': isSticky && !scrolled && !preScrolled && transparentNav,
+            'bg-opacity-70': isSticky && !scrolled && !preScrolled && !transparentNav,
+            'rounded-b-standard': roundedBottom && (scrolled || preScrolled || dropdownOpen)
         }"
-        @if($frostedGlass && isset($scrolledBgStyle))
-        :style="(isSticky && scrolled && !preScrolled) ? '{{ $scrolledBgStyle }}' : ''"
-        @endif
-        class="{{ $staticClasses }}" x-transition>
+        x-transition>
 
         {{ $slot }}
     </nav>

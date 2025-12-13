@@ -107,6 +107,15 @@ class Navigation
      */
     protected function getThemeSetting(string $key, $default = null)
     {
+        // Try package Theme class first
+        if (class_exists(\Fuelviews\VantagePackage\Models\Theme::class)) {
+            $theme = \Fuelviews\VantagePackage\Models\Theme::current();
+            if ($theme && isset($theme->$key)) {
+                return $theme->$key;
+            }
+        }
+
+        // Fallback to App namespace for backward compatibility
         if (class_exists(\App\Models\Theme::class)) {
             $theme = \App\Models\Theme::current();
             if ($theme && isset($theme->$key)) {

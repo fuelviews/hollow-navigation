@@ -1,10 +1,10 @@
 <a href="tel:{{ Navigation::getPhone() }}">
     @if (request()->query('gclid') || request()->cookie('gclid') || session('gclid'))
         <button
-            class="inline-flex items-center justify-center gap-2 rounded-md bg-prime px-4 py-2 text-base font-bold text-white hover:bg-cta hover:text-black transition-colors duration-200 whitespace-nowrap"
+            class="inline-flex items-center justify-center gap-2 rounded-md bg-alt px-4 py-2 text-base font-bold text-white hover:bg-alt-600 transition-colors duration-200 whitespace-nowrap cursor-pointer"
             onclick="dataLayer.push({'event': 'Phone_Call_Gclid'});">
     @else
-            <button {{ $attributes->merge(['class' => 'inline-flex items-center justify-center gap-2 rounded-md bg-prime px-4 py-2 text-base font-bold text-white hover:bg-cta hover:text-black transition-colors duration-200 whitespace-nowrap']) }} onclick="dataLayer.push({'event': 'Phone_Call'});">
+            <button {{ $attributes->merge(['class' => 'inline-flex items-center justify-center gap-2 rounded-md bg-alt px-4 py-2 text-base font-bold text-white hover:bg-alt-600 transition-colors duration-200 whitespace-nowrap cursor-pointer']) }} onclick="dataLayer.push({'event': 'Phone_Call'});">
         @endif
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5 flex-shrink-0"
                 viewBox="0 0 512 512">
