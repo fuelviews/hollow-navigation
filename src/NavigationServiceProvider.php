@@ -11,6 +11,7 @@ use Fuelviews\Navigation\Components\Mobile\MobileNavigation;
 use Fuelviews\Navigation\Components\NavigationScroll;
 use Fuelviews\Navigation\Components\Spacer;
 use Fuelviews\Navigation\Components\TopBar;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
@@ -65,6 +66,9 @@ class NavigationServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
+        // Register anonymous Blade components from the components directory
+        Blade::anonymousComponentNamespace('navigation::components', 'navigation');
+
         View::composer('navigation::*', function ($view) {
             $view->with('navigation', app('navigation'));
         });
